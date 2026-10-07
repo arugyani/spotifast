@@ -9,8 +9,11 @@ Spotifast uses Spotify's
 catalogue data. It uses [librespot](https://github.com/librespot-org/librespot)
 for a few extra details and for audio playback.
 
-Features missing from both cannot be added to Spotifast. They may become
-possible if Spotify adds an API or librespot adds lawful support.
+Some missing features need additional client engineering; others depend on
+services Spotify does not expose or lawful support in the player. This fork's
+[Juxtopposed redesign map](https://github.com/arugyani/spotifast/blob/main/REDESIGN.md) distinguishes those cases and
+documents the missing UI, models, requests and local feature work. An upstream
+product boundary is not itself an API limitation.
 
 ## Web API
 
@@ -105,7 +108,10 @@ The Web API and librespot do not provide these features:
 - **Local files.** librespot only streams Spotify's catalogue. It cannot fetch
   audio for a `spotify:local:` entry. Playing files from disk would require a
   separate player. See [issue #3](https://github.com/crmne/spotifast/issues/3).
-- **Audiobooks.** librespot does not play them. Spotify lists some
+- **Audiobook playback.** librespot does not play them. Audiobook and chapter
+  metadata, search and saved-book browsing have Web API endpoints, but this
+  client has not integrated them. Metadata access does not establish playback
+  support. Spotify lists some
   audiobooks among saved shows; since 0.10.0, Spotifast asks the
   librespot session which ones and leaves them out of the Podcasts shelf.
 - **Google Cast.** Spotify's own apps find Cast speakers on the local
@@ -120,8 +126,11 @@ The Web API and librespot do not provide these features:
 - **Free-account playback.** Replacing Spotify audio with another source is
   also out of scope. See the
   [contribution guide](https://github.com/crmne/spotifast/blob/main/CONTRIBUTING.md).
-- **Friend activity, private-session status, and similar social features.**
-  Spotify has no public API for them.
+- **Friend activity and changing private-session mode.** No supported public
+  API is identified for these operations. Read-only private-session status is
+  different: Spotify documents `device.is_private_session` in its
+  [playback-state response](https://developer.spotify.com/documentation/web-api/reference/get-information-about-the-users-current-playback).
+  Spotifast's `Device` model does not currently retain that field.
 - **Canvas videos and video podcasts.** librespot does not provide them.
 - **Play counts.** Spotify shows them only through a private endpoint its own
   apps use. The Web API has no play counts, and librespot does not provide
